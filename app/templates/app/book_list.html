@@ -1,0 +1,23 @@
+{% extends 'app/base.html' %}
+
+{% block books_active%}active{% endblock %}
+
+{% block content %}
+    <h2>Books {% if author %} of {{ author }} {% endif %}</h2>
+    <ul>
+        {% for book in books %}
+        <li>{{ book }}, {{ book.publication_year }}
+            {% if not author %} -
+                {% for author in book.authors.all %}
+                    {{ author }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% if author %}
+        <a href="{% url 'app:create_author_book' author_id=author.id %}">Add book</a>
+    {% else %}
+        <a href="{% url 'app:create_book' %}">Add book</a>
+    {% endif %}
+{% endblock %}

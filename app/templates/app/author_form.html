@@ -1,0 +1,15 @@
+{% extends 'app/base.html' %}
+{% load add_css %}
+{% block content %}
+    <h2>Add author</h2>
+    <form class="form" role="form" action="{% url 'app:create_author' %}" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field|css:"form-control col-5" }}
+            </div>
+        {% endfor %}
+        <button class="btn btn-lg btn-primary">Submit</button>
+    </form>
+{% endblock %}

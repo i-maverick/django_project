@@ -21,6 +21,7 @@ from app import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^app/', include('app.urls')),
+    url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),

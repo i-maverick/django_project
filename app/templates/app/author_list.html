@@ -1,0 +1,13 @@
+{% extends 'app/base.html' %}
+
+{% block authors_active%}active{% endblock %}
+
+{% block content %}
+    <h2>Authors</h2>
+    <ul>
+        {% for author in object_list %}
+        <li><a href="{% url 'app:author_book_list' author.id %}">{{ author }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'app:create_author' %}">Add author</a>
+{% endblock %}
