@@ -24,7 +24,7 @@ class BookList(ListView):
     context_object_name = 'books'
 
     def get_queryset(self):
-        return Book.objects.order_by('authors', 'publication_year')
+        return Book.objects.order_by('title')
 
 
 class AuthorBookList(ListView):
