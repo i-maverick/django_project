@@ -3,11 +3,16 @@
 {% block authors_active%}active{% endblock %}
 
 {% block content %}
-    <h2>Authors</h2>
-    <ul>
-        {% for author in object_list %}
-        <li><a href="{% url 'app:author_book_list' author.id %}">{{ author }}</a></li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'app:create_author' %}">Add author</a>
+<h2>Authors</h2>
+<table class="table">
+    {% for author in object_list %}
+    <tr scope="row">
+        <td><a href="{% url 'app:author_book_list' author.id %}">{{ author }}</a></td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
+{% if user.is_authenticated %}
+<a href="{% url 'app:create_author' %}">Add author</a>
+{% endif %}
 {% endblock %}

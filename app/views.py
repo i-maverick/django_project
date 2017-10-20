@@ -15,21 +15,24 @@ def private(request):
     return render(request, 'app/private.html')
 
 
-class AuthorList(LoginRequiredMixin, ListView):
+class AuthorList(ListView):
     model = Author
 
 
-class BookList(LoginRequiredMixin, ListView):
-    model = Book
+class BookList(ListView):
+    # model = Book
     context_object_name = 'books'
 
+    def get_queryset(self):
+        return Book.objects.order_by('authors', 'publication_year')
 
-class AuthorBookList(LoginRequiredMixin, ListView):
+
+class AuthorBookList(ListView):
     template_name = 'app/book_list.html'
     context_object_name = 'books'
 
     def get_queryset(self):
-        return Book.objects.filter(authors=self.kwargs['id'])
+        return Book.objects.filter(authors=self.kwargs['id']).order_by('publication_year')
 
     def get_context_data(self, **kwargs):
         context = super(AuthorBookList, self).get_context_data(**kwargs)
@@ -38,7 +41,7 @@ class AuthorBookList(LoginRequiredMixin, ListView):
         return context
 
 
-class CreateAuthorView(CreateView):
+class CreateAuthorView(LoginRequiredMixin, CreateView):
     model = Author
     fields = ['first_name', 'last_name']
     success_url = reverse_lazy('app:author_list')
@@ -47,7 +50,7 @@ class CreateAuthorView(CreateView):
         return super(CreateAuthorView, self).form_valid(form)
 
 
-class CreateBookView(CreateView):
+class CreateBookView(LoginRequiredMixin, CreateView):
     model = Book
     fields = ['title', 'authors', 'publication_year']
     success_url = reverse_lazy('app:book_list')
