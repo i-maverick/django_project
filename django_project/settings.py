@@ -162,4 +162,4 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-ALLOWED_HOSTS = ['django-test-project.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'django-test-project.herokuapp.com']
