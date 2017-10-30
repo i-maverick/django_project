@@ -1,0 +1,44 @@
+{% extends 'app/base.html' %}
+{% load add_css %}
+{% load static %}
+{% block author_select_active%}active{% endblock %}
+
+{% block content %}
+<h2>Books by author</h2>
+<form action="" method="post">
+    {% csrf_token %}
+    {% for field in form %}
+        <div>
+            {{ field|css:"form-control col-2" }}
+        </div>
+    {% endfor %}
+</form>
+
+{% if books %}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Publication year</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for book in books %}
+    <tr>
+        <td scope="row">{{ book }}</td>
+        <td>{{ book.publication_year }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+<br>
+{% if user.is_authenticated %}
+<a href="{% url 'app:create_book' %}">Add book</a>
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+{{ form.media }}
+
+{% endblock %}

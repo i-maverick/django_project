@@ -1,10 +1,19 @@
 {% extends 'app/base.html' %}
-
-{% block books_active%}active{% endblock %}
-
+{% load add_css %}
 {% block content %}
-<h2>Books {% if author %} of {{ author }} {% endif %}</h2>
-<table class="table">
+    <h2>Search</h2>
+    <form class="form" role="form" action="" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.errors }}
+                {{ field|css:"form-control col-5" }}
+            </div>
+            <button class="btn btn-lg btn-primary">Search</button>
+        {% endfor %}
+    </form>
+    <br>
+    <table class="table">
     <thead>
         <tr>
             <th scope="col">Title</th>
@@ -20,13 +29,11 @@
     {% for book in books %}
     <tr>
         <td scope="row">{{ book.title }}</td>
-        {% if not author %}
-            <td>
-            {% for author in book.authors.all %}
-                {{ author }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-            </td>
-        {% endif %}
+        <td>
+        {% for author in book.authors.all %}
+            {{ author }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+        </td>
         <td>
         {% for genre in book.genres.all %}
             {{ genre }}{% if not forloop.last %}, {% endif %}
@@ -37,9 +44,5 @@
     </tr>
     {% endfor %}
     </tbody>
-</table>
-<br>
-{% if user.is_authenticated %}
-<a href="{% url 'app:create_book' %}">Add book</a>
-{% endif %}
+    </table>
 {% endblock %}
