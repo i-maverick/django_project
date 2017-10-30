@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-# from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, FormView
 
@@ -84,16 +84,16 @@ class CreateGenreView(LoginRequiredMixin, CreateView):
     #     return super(CreateGenreView, self).form_valid(form)
 
 
-# class AjaxableResponseMixin(object):
-#
-#     def form_valid(self, form):
-#         print('AjaxableResponseMixin', self.request)
-#         response = super(AjaxableResponseMixin, self).form_valid(form)
-#         if self.request.is_ajax():
-#             print('ajax', response)
-#             return JsonResponse(data)
-#         else:
-#             return response
+class AjaxableResponseMixin(object):
+
+    def form_valid(self, form):
+        print('AjaxableResponseMixin', self.request)
+        response = super(AjaxableResponseMixin, self).form_valid(form)
+        if self.request.is_ajax():
+            print('ajax', response)
+            return JsonResponse(data)
+        else:
+            return response
 
 
 class AuthorAutocomplete(autocomplete.Select2QuerySetView):
@@ -135,13 +135,12 @@ class SearchView(FormView):
         form = self.form_class(request.POST)
         context = {'form': form}
         if form.is_valid():
-            if 'field' in self.request.POST:
-                data = request.POST['field']
-                books = Book.objects.filter(
-                    Q(title__icontains=data) |
-                    Q(authors__name__icontains=data) |
-                    Q(publication_year__icontains=data) |
-                    Q(isbn__icontains=data) |
-                    Q(genres__name__icontains=data))
-                context['books'] = books
+            data = request.POST.get('field')
+            books = Book.objects.filter(
+                Q(title__icontains=data) |
+                Q(authors__name__icontains=data) |
+                Q(publication_year__icontains=data) |
+                Q(isbn__icontains=data))
+                # Q(genres__name__icontains=data))
+            context['books'] = books
         return render(request, self.template_name, context)

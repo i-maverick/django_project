@@ -58,4 +58,7 @@ class AuthorSelectForm(forms.ModelForm):
 
 
 class SearchForm(forms.Form):
-    field = forms.CharField(max_length=32, required=False)
+    field = forms.CharField(
+        max_length=32,
+        required=False,
+        widget=forms.TextInput(attrs={'data-placeholder': 'Enter text ...'}))
