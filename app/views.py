@@ -104,7 +104,7 @@ class AuthorAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 
-class AuthorSelectView(LoginRequiredMixin, FormView):
+class AuthorSelectView(FormView):
     form_class = AuthorSelectForm
     template_name = 'app/author_select.html'
 

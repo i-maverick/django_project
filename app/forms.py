@@ -8,23 +8,24 @@ from .models import Author, Book, Genre
 
 
 class AuthorForm(forms.ModelForm):
+
     name = forms.CharField(max_length=64, help_text='Enter the full name')
 
     class Meta:
         model = Author
-        fields = ('__all__')
+        fields = '__all__'
 
 
 class BookForm(forms.ModelForm):
-
-    class Meta:
-        model = Book
-        fields = ('__all__')
 
     author_list = [(a.id, a) for a in Author.objects.all().order_by('name')]
     authors = forms.MultipleChoiceField(choices=author_list)
     genre_list = [(g.id, g) for g in Genre.objects.all().order_by('name')]
     genres = forms.MultipleChoiceField(choices=genre_list)
+
+    class Meta:
+        model = Book
+        fields = '__all__'
 
     def clean_publication_year(self):
         year = self.cleaned_data['publication_year']

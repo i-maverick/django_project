@@ -6,7 +6,7 @@
         {% csrf_token %}
         {% for field in form %}
             {{ field.errors }}
-            {{ field|css:"form-control col-3 mr-sm-2" }}
+            {{ field|css:"form-control col-2 mr-sm-2" }}
             <button class="btn btn-outline-success" type="submit">Search</button>
         {% endfor %}
     </form>
