@@ -2,47 +2,112 @@
 {% load add_css %}
 {% block content %}
     <h2>Search</h2>
-    <form class="form-inline" action="" method="post">
+    <form id="form" class="form" action="" method="post">
         {% csrf_token %}
-        {% for field in form %}
-            {{ field.errors }}
-            {{ field|css:"form-control col-2 mr-sm-2" }}
-            <button class="btn btn-outline-success" type="submit">Search</button>
-        {% endfor %}
+        <div class="form-inline">
+            {{ form.search|css:"form-control col-2 mr-sm-2" }}
+            <button id="search" class="btn btn-success" type="submit">Search</button>
+        </div>
     </form>
     <br>
     {% if books %}
+    <div class="col-5">
         <table class="table">
-        <thead>
+            <thead class="table-active">
             <tr>
-                <th scope="col">Title</th>
-                {% if not author %}
-                <th scope="col">Authors</th>
-                {% endif %}
-                <th scope="col">Genres</th>
-                <th scope="col">Publication year</th>
-                <th scope="col">ISBN</th>
+
+                <td><input type="checkbox" id="select-all"><b>&nbsp;Select all</b></td>
+                <td><b>Title</b></td>
+                <!--<td><b>Authors</b></td>-->
+                <!--<td><b>Genres</b></td>-->
+                <td><b>Publication year</b></td>
+                <td><b>ISBN</b></td></tr>
+            </thead>
+            <tbody>
+            {% for book in books %}
+            <tr>
+                <td><input type="checkbox" id="check_{{ book.id }}"></td>
+                <td>{{ book.title }}</td>
+                <!--<td>{{ book.authors }}</td>-->
+                <!--<td>{{ book.genres }}</td>-->
+                <td>{{ book.publication_year }}</td>
+                <td>{{ book.isbn }}</td>
             </tr>
-        </thead>
-        <tbody>
-        {% for book in books %}
-        <tr>
-            <td scope="row">{{ book.title }}</td>
-            <td>
-            {% for author in book.authors.all %}
-                {{ author }}{% if not forloop.last %}, {% endif %}
             {% endfor %}
-            </td>
-            <td>
-            {% for genre in book.genres.all %}
-                {{ genre }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-            </td>
-            <td>{{ book.publication_year }}</td>
-            <td>{{ book.isbn }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
+            </tbody>
         </table>
+        <button id="add_selected" class="btn btn-primary">Add selected</button>
+    </div>
+
     {% endif %}
+        <!--<div class="form-inline">-->
+            <!--<select class="form-control col-3" name="books" id="id_books" multiple="multiple" size=20>-->
+                <!--{% for book in books %}-->
+                <!--<option value="{{ book.id }}">{{ book }}</option>-->
+                <!--{% endfor %}-->
+            <!--</select>-->
+            <!--<a href="#" id="add">&nbsp;&gt;&gt;&nbsp;</a>-->
+            <!--<a href="#" id="remove">&nbsp;&lt;&lt;&nbsp;</a>-->
+            <!--<select class="form-control col-3" name="selected" id="id_selected" multiple="multiple" size=20>-->
+                <!--{% for book in selected %}-->
+                <!--<option value="{{ book.id }}">{{ book }}</option>-->
+                <!--{% endfor %}-->
+            <!--</select>-->
+        <!--</div>-->
+    <!--{% if books %}-->
+        <!--<table class="table">-->
+        <!--<thead>-->
+            <!--<tr>-->
+                <!--<th scope="col">Title</th>-->
+                <!--{% if not author %}-->
+                <!--<th scope="col">Authors</th>-->
+                <!--{% endif %}-->
+                <!--<th scope="col">Genres</th>-->
+                <!--<th scope="col">Publication year</th>-->
+                <!--<th scope="col">ISBN</th>-->
+            <!--</tr>-->
+        <!--</thead>-->
+        <!--<tbody>-->
+        <!--{% for book in books %}-->
+        <!--<tr>-->
+            <!--<td scope="row">{{ book.title }}</td>-->
+            <!--<td>-->
+            <!--{% for author in book.authors.all %}-->
+                <!--{{ author }}{% if not forloop.last %}, {% endif %}-->
+            <!--{% endfor %}-->
+            <!--</td>-->
+            <!--<td>-->
+            <!--{% for genre in book.genres.all %}-->
+                <!--{{ genre }}{% if not forloop.last %}, {% endif %}-->
+            <!--{% endfor %}-->
+            <!--</td>-->
+            <!--<td>{{ book.publication_year }}</td>-->
+            <!--<td>{{ book.isbn }}</td>-->
+        <!--</tr>-->
+        <!--{% endfor %}-->
+        <!--</tbody>-->
+        <!--</table>-->
+    <!--{% endif %}-->
+{% endblock %}
+
+{% block footer %}
+<script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $().ready(function() {
+        $('#add').click(function() {
+            $('#id_books option:selected').remove().appendTo('#id_selected');
+        });
+        $('#remove').click(function() {
+            $('#id_selected option:selected').remove().appendTo('#id_books');
+        });
+    });
+
+    $('#select-all').click(function(event) {
+        val = this.checked;
+        $("input[id^='check_']").each(function() {
+            this.checked = val;
+        });
+    });
+
+</script>
 {% endblock %}
