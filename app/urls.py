@@ -14,4 +14,6 @@ urlpatterns = [
     url(r'^author_select/$', views.AuthorSelectView.as_view(), name='author_select'),
     url(r'^author_autocomplete/$', views.AuthorAutocomplete.as_view(), name='author_autocomplete'),
     url(r'^search/$', views.SearchView.as_view(), name='search'),
+    url(r'^select_books/$', views.select_books, name='select_books'),
+    url(r'^run_tests/$', views.run_tests, name='run_tests'),
 ]

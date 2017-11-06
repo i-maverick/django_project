@@ -1,0 +1,6 @@
+{% for book in selected_books %}
+    <tr><td><input type="checkbox" id="selected-check-{{ book.id }}" class="selected-book"></td>
+        <td>{{ book.title }}</td>
+        <td>{{ book.publication_year }}</td>
+        <td>{{ book.isbn }}</td></tr>
+{% endfor %}

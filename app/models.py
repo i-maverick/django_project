@@ -1,4 +1,5 @@
 from django.db import models
+import json
 
 
 class Genre(models.Model):
@@ -24,3 +25,6 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
