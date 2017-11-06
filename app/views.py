@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, FormView
 
@@ -127,19 +127,18 @@ class SearchView(FormView):
     form_class = SearchForm
     template_name = 'app/search.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(SearchView, self).get_context_data(**kwargs)
-        print(context)
-        return context
-
     def get(self, request, *args, **kwargs):
         form = self.form_class()
-        return render(request, self.template_name, {'form': form})
+        context = {'form': form}
+        if 'stored_ids' in request.session:
+            stored_ids = request.session['stored_ids']
+            if stored_ids:
+                context['selected_books'] = Book.objects.filter(id__in=stored_ids)
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         context = {'form': form}
-        print("=========== post", form)
         if form.is_valid():
             data = request.POST.get('search')
             books = Book.objects.filter(
@@ -151,10 +150,46 @@ class SearchView(FormView):
             # form.fields['books'].choices = [(book.id, "{}, {}".format(
             #     book.title, book.publication_year)) for book in books]
             context['books'] = books
-            if 'selected' in request.POST:
-                selected_ids = request.POST.getlist('selected')
-                print(selected_ids)
-                selected_books = Book.objects.filter(id__in = selected_ids)
-                print(selected_books)
-                context['selected'] = selected_books
+
+        if 'stored_ids' in request.session:
+            stored_ids = request.session['stored_ids']
+            if stored_ids:
+                selected_books = Book.objects.filter(id__in=stored_ids)
+                context['selected_books'] = selected_books
         return render(request, self.template_name, context)
+
+
+def select_books(request):
+    stored_ids = []
+
+    if 'stored_ids' in request.session:
+        stored_ids = request.session['stored_ids']
+
+    if request.method == 'POST':
+        if 'selected_ids[]' in request.POST:
+            selected_ids = request.POST.getlist('selected_ids[]')
+            for id in selected_ids:
+                if not stored_ids or id not in stored_ids:
+                    stored_ids.append(id)
+
+        if 'removed_ids[]' in request.POST:
+            removed_ids = request.POST.getlist('removed_ids[]')
+            if removed_ids:
+                stored_ids = [id for id in stored_ids if id not in removed_ids]
+
+        request.session['stored_ids'] = stored_ids
+
+    selected_books = Book.objects.filter(id__in=stored_ids)
+    return render(request, 'app/selected_books.html', {'selected_books': selected_books })
+
+
+def run_tests(request):
+    if request.method == 'POST':
+        if 'stored_ids' in request.session:
+            request.session['stored_ids'] = []
+
+        if 'ids[]' in request.POST:
+            ids = request.POST.getlist('ids[]')
+            print('Run tests', ids)
+
+    return JsonResponse({})
