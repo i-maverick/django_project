@@ -3,8 +3,21 @@
     <title>Tests</title>
 </head>
 <body>
-{% for test in tests %}
-{{ test }}<br>
-{% endfor %}
+<table>
+    <thead>
+    <td>Test ID</td>
+    <td>Test name</td>
+    <td>Devices</td>
+    </thead>
+    <tbody>
+    {% for key, value in tests.items %}
+    <tr>
+        <td>{{ key }}</td>
+        <td>{{ value.test }}</td>
+        <td>{{ value.devices|join:', ' }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
 </body>
 </html>
