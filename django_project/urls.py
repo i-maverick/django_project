@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^api/', include('api.urls'), name='api'),
+    url(r'^tests/', include('tests.urls'), name='tests'),
 ]
 
 if settings.DEBUG:
