@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Test, Dump
+from .models import Test
 
 
 def index(request):
@@ -22,8 +22,8 @@ def index(request):
 
     tests = dict()
     for test in Test.objects.all()\
-            .filter(name__icontains='Test'):
-            # .filter(dumps__device_name__exact='ATM'):
+            .filter(name__icontains='Test')\
+            .filter(dumps__device_name__exact='ATM'):
         devices = []
         for device in test.dumps.all().values_list('device_name'):
             if device[0] not in devices:
